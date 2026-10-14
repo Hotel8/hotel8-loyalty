@@ -145,4 +145,3 @@ async fn handle_message(
     // see `points_logic::award_on_checkout_sql`. Replays are no-ops.
     let _ = pool; // award execution wired in the D-layer story (member lookup by folio)
 }
-

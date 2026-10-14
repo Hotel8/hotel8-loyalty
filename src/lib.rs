@@ -4,14 +4,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Library re-exports for integration tests.
-pub mod event_consumer;
-pub mod loyalty_rules;
-pub mod event_emit;
 pub mod admin_ui;
 pub mod auth;
 pub mod config;
+pub mod event_consumer;
+pub mod event_emit;
 pub mod handlers;
+pub mod loyalty_rules;
 pub mod openapi;
-pub mod registration;
 pub mod policy;
+pub mod registration;
 pub mod server;

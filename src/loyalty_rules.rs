@@ -70,13 +70,21 @@ pub fn tier_for_balance(balance: i64) -> Tier {
 /// Count the tier upgrades implied by a balance change (0 or more).
 pub fn upgrades(old_balance: i64, new_balance: i64) -> usize {
     let (o, n) = (tier_for_balance(old_balance), tier_for_balance(new_balance));
-    if n > o { n as usize - o as usize } else { 0 }
+    if n > o {
+        n as usize - o as usize
+    } else {
+        0
+    }
 }
 
 /// Count the tier downgrades implied by a balance change (0 or more).
 pub fn downgrades(old_balance: i64, new_balance: i64) -> usize {
     let (o, n) = (tier_for_balance(old_balance), tier_for_balance(new_balance));
-    if n < o { o as usize - n as usize } else { 0 }
+    if n < o {
+        o as usize - n as usize
+    } else {
+        0
+    }
 }
 
 /// Points earned for a stay: spend × points-per-currency × multiplier,
@@ -115,7 +123,13 @@ mod tests {
 
     #[test]
     fn from_label_round_trips_every_variant() {
-        for t in [Tier::Base, Tier::Silver, Tier::Gold, Tier::Platinum, Tier::Diamond] {
+        for t in [
+            Tier::Base,
+            Tier::Silver,
+            Tier::Gold,
+            Tier::Platinum,
+            Tier::Diamond,
+        ] {
             assert_eq!(Tier::from_label(t.label()), t);
         }
         assert_eq!(Tier::from_label("garbage"), Tier::Base);

@@ -77,10 +77,7 @@ fn labels_round_trip_every_tier() {
 
 #[test]
 fn multi_tier_upgrade_counts() {
-    assert_eq!(
-        rules::upgrades(0, rules::Tier::Diamond.min_points() + 1),
-        4
-    );
+    assert_eq!(rules::upgrades(0, rules::Tier::Diamond.min_points() + 1), 4);
     assert_eq!(
         rules::upgrades(
             rules::Tier::Gold.min_points(),

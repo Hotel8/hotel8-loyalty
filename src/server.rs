@@ -4,12 +4,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //! Axum server setup for Loyalty.
-use std::sync::Arc;
-use axum::routing::{get, post, put};
 use crate::handlers::AppState;
+use axum::routing::{get, post, put};
+use std::sync::Arc;
 
-pub async fn build_state(core: sentin8::shell::ServiceCore)
-    -> anyhow::Result<crate::handlers::AppState> {
+pub async fn build_state(
+    core: sentin8::shell::ServiceCore,
+) -> anyhow::Result<crate::handlers::AppState> {
     let config = crate::config::LoyaltyConfig::from_env();
 
     // Cert-presenting Bus client (CERTFREE-4V): the `loyalty` workload
@@ -87,66 +88,118 @@ pub async fn build_state(core: sentin8::shell::ServiceCore)
 /// owns the boot sequence, state binding, OpenAPI merge and the standard
 /// middleware stack; this adds ONLY routes (including the service's own
 /// `/v1/health` — custom payload).
-pub fn routes(router: axum::Router<crate::handlers::AppState>)
-    -> axum::Router<crate::handlers::AppState> {
-   router
+pub fn routes(
+    router: axum::Router<crate::handlers::AppState>,
+) -> axum::Router<crate::handlers::AppState> {
+    router
         .route("/v1/health", get(crate::handlers::health))
         // ── Admin UI (RFW) ─────────────────────────────────────────────────
         .route("/v1/admin/ui/{*page}", get(crate::admin_ui::get_admin_ui))
         // ── Sentin8:Policy admin API (shared implementation,
         // handlers generic over this AppState).
-        .route("/v1/admin/policy-sets",
-            get(sentin8::shield::admin::list_policy_sets::<crate::handlers::AppState>))
-        .route("/v1/admin/policy-sets/{name}",
+        .route(
+            "/v1/admin/policy-sets",
+            get(sentin8::shield::admin::list_policy_sets::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/policy-sets/{name}",
             get(sentin8::shield::admin::get_policy_set::<crate::handlers::AppState>)
                 .put(sentin8::shield::admin::put_policy_set::<crate::handlers::AppState>)
-                .delete(sentin8::shield::admin::delete_policy_set::<crate::handlers::AppState>))
-        .route("/v1/admin/policy-sets/{name}/test",
-            post(sentin8::shield::admin::test_policy_set::<crate::handlers::AppState>))
-        .route("/v1/admin/policy-sets/enforce",
-            post(sentin8::shield::admin::admin_enforce_policy_set::<crate::handlers::AppState>))
-        .route("/v1/admin/policy-sets/shadow",
-            post(sentin8::shield::admin::admin_shadow_policy_set::<crate::handlers::AppState>))
-        .route("/v1/admin/policy-sets/disable",
-            post(sentin8::shield::admin::admin_disable_policy_set::<crate::handlers::AppState>))
-        .route("/v1/admin/relations",
+                .delete(sentin8::shield::admin::delete_policy_set::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/policy-sets/{name}/test",
+            post(sentin8::shield::admin::test_policy_set::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/policy-sets/enforce",
+            post(sentin8::shield::admin::admin_enforce_policy_set::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/policy-sets/shadow",
+            post(sentin8::shield::admin::admin_shadow_policy_set::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/policy-sets/disable",
+            post(sentin8::shield::admin::admin_disable_policy_set::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/relations",
             get(sentin8::shield::admin::list_relations::<crate::handlers::AppState>)
                 .put(sentin8::shield::admin::put_relation::<crate::handlers::AppState>)
-                .delete(sentin8::shield::admin::delete_relation::<crate::handlers::AppState>))
-        .route("/v1/admin/relations/check",
-            get(sentin8::shield::admin::check_relation::<crate::handlers::AppState>))
-        .route("/v1/admin/attributes",
+                .delete(sentin8::shield::admin::delete_relation::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/relations/check",
+            get(sentin8::shield::admin::check_relation::<crate::handlers::AppState>),
+        )
+        .route(
+            "/v1/admin/attributes",
             get(sentin8::shield::admin::list_attributes::<crate::handlers::AppState>)
                 .put(sentin8::shield::admin::put_attribute::<crate::handlers::AppState>)
-                .delete(sentin8::shield::admin::delete_attribute::<crate::handlers::AppState>))
+                .delete(sentin8::shield::admin::delete_attribute::<crate::handlers::AppState>),
+        )
         // Create + list programs
-        .route("/v1/programs", post(crate::handlers::create_program).get(crate::handlers::list_programs))
+        .route(
+            "/v1/programs",
+            post(crate::handlers::create_program).get(crate::handlers::list_programs),
+        )
         .route("/v1/members", post(crate::handlers::create_member))
         .route("/v1/points/award", post(crate::handlers::award_points))
         .route("/v1/points/redeem", post(crate::handlers::redeem_points))
         // Tier configuration
-        .route("/v1/tiers", post(crate::handlers::configure_tier).get(crate::handlers::list_tiers))
+        .route(
+            "/v1/tiers",
+            post(crate::handlers::configure_tier).get(crate::handlers::list_tiers),
+        )
         // Reward CRUD
-        .route("/v1/programs/{program_id}/rewards", post(crate::handlers::create_reward).get(crate::handlers::list_rewards))
-        .route("/v1/programs/{program_id}/rewards/{reward_id}", put(crate::handlers::update_reward).delete(crate::handlers::delete_reward))
+        .route(
+            "/v1/programs/{program_id}/rewards",
+            post(crate::handlers::create_reward).get(crate::handlers::list_rewards),
+        )
+        .route(
+            "/v1/programs/{program_id}/rewards/{reward_id}",
+            put(crate::handlers::update_reward).delete(crate::handlers::delete_reward),
+        )
         // Member profile
         .route("/v1/members/{member_id}", get(crate::handlers::get_member))
         // Link to guest profile
-        .route("/v1/members/link-guest", post(crate::handlers::link_to_guest_profile))
+        .route(
+            "/v1/members/link-guest",
+            post(crate::handlers::link_to_guest_profile),
+        )
         // Member search
-        .route("/v1/admin/programs/{program_id}/members", get(crate::handlers::search_members))
+        .route(
+            "/v1/admin/programs/{program_id}/members",
+            get(crate::handlers::search_members),
+        )
         // Manual points adjustment
-        .route("/v1/admin/programs/{program_id}/members/{member_id}/adjust", post(crate::handlers::adjust_points))
+        .route(
+            "/v1/admin/programs/{program_id}/members/{member_id}/adjust",
+            post(crate::handlers::adjust_points),
+        )
         // Points calculation
-        .route("/v1/points/calculate", post(crate::handlers::trigger_points_calculation))
+        .route(
+            "/v1/points/calculate",
+            post(crate::handlers::trigger_points_calculation),
+        )
         // Transaction history
-        .route("/v1/members/{member_id}/transactions", get(crate::handlers::get_member_transactions))
+        .route(
+            "/v1/members/{member_id}/transactions",
+            get(crate::handlers::get_member_transactions),
+        )
         // Points expiry
-        .route("/v1/cron/expire-points", post(crate::handlers::expire_points))
+        .route(
+            "/v1/cron/expire-points",
+            post(crate::handlers::expire_points),
+        )
         // Tier review
         .route("/v1/cron/review-tiers", post(crate::handlers::review_tiers))
         // Member rewards catalog
-        .route("/v1/members/{member_id}/rewards", get(crate::handlers::get_member_rewards))
+        .route(
+            "/v1/members/{member_id}/rewards",
+            get(crate::handlers::get_member_rewards),
+        )
         // Reward redemption with voucher
         .route("/v1/rewards/redeem", post(crate::handlers::redeem_reward))
 }
