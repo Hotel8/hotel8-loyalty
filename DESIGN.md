@@ -87,7 +87,7 @@ sequenceDiagram
     C->>L: POST /v1/redemptions {member, reward}
     L->>S: require(hotel8:loyalty:points:write)
     S-->>L: permit
-    L->>DB: BEGIN; balance check; INSERT redemption + txn (redeem); outbox; journal; COMMIT
+    L->>DB: BEGIN, balance check, INSERT redemption + txn (redeem), outbox, journal, COMMIT
     alt insufficient balance
         L-->>C: 422 with remaining balance
     end
