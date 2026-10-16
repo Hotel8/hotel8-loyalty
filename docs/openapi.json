@@ -1,0 +1,163 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "hotel8-loyalty",
+    "description": "Sentin8 Hotel8:Loyalty — Loyalty Program service.",
+    "license": {
+      "name": "MIT OR Apache-2.0",
+      "identifier": "MIT OR Apache-2.0"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/admin/members": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/admin/programs/{program_id}/members`",
+        "operationId": "search_members",
+        "responses": {
+          "200": {
+            "description": "List of members",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`POST /v1/members`",
+        "operationId": "create_member",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Member created",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/admin/members/{id}": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/members/{member_id}`",
+        "operationId": "get_member",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Member ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member details",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          },
+          "404": {
+            "description": "Member not found"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/admin/points": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/members/{member_id}/transactions`",
+        "operationId": "get_member_transactions",
+        "parameters": [
+          {
+            "name": "member_id",
+            "in": "path",
+            "description": "Member ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Point transaction history",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {},
+  "security": [],
+  "tags": [
+    {
+      "name": "loyalty",
+      "description": "Hotel8:Loyalty admin API — members, points"
+    }
+  ]
+}
