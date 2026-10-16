@@ -2,7 +2,11 @@
   "vertical": "hotel8",
   "services": [
     {
-      "service_type": "hotel8:loyalty"
+      "service_type": "hotel8:loyalty",
+      "telemetry_property": {
+        "slug": "loyalty",
+        "name": "Hotel8:Loyalty Telemetry"
+      }
     }
   ]
 }
