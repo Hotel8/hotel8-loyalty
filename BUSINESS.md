@@ -1,4 +1,4 @@
-# BUSINESS.md: Hotel8:Loyalty — Business Requirements & Functionality
+# Hotel8:Loyalty — Business Requirements & Functionality
 
 > Audience: product owners, business analysts, and anyone evaluating what
 > Hotel8:Loyalty **does for the business**. For architecture read
