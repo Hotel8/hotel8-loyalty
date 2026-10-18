@@ -1,0 +1,632 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "hotel8-loyalty",
+    "description": "Sentin8 Hotel8:Loyalty — Loyalty Program service.",
+    "license": {
+      "name": "MIT OR Apache-2.0",
+      "identifier": "MIT OR Apache-2.0"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/admin/programs/{program_id}/members": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/admin/programs/{program_id}/members`",
+        "operationId": "search_members",
+        "responses": {
+          "200": {
+            "description": "List of members",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/admin/programs/{program_id}/members/{member_id}/adjust": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "adjust_points",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/admin/ui/{page}": {
+      "get": {
+        "tags": [
+          "loyalty-admin"
+        ],
+        "operationId": "get_admin_ui",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/cron/expire-points": {
+      "post": {
+        "tags": [
+          "loyalty-cron"
+        ],
+        "operationId": "expire_points",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/cron/review-tiers": {
+      "post": {
+        "tags": [
+          "loyalty-cron"
+        ],
+        "operationId": "review_tiers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/members": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`POST /v1/members`",
+        "operationId": "create_member",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Member created",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/members/link-guest": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "link_to_guest_profile",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/members/{member_id}": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/members/{member_id}`",
+        "operationId": "get_member",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Member ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member details",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          },
+          "404": {
+            "description": "Member not found"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/members/{member_id}/rewards": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "get_member_rewards",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/members/{member_id}/transactions": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "summary": "`GET /v1/members/{member_id}/transactions`",
+        "operationId": "get_member_transactions",
+        "parameters": [
+          {
+            "name": "member_id",
+            "in": "path",
+            "description": "Member ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Point transaction history",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "403": {
+            "description": "Missing loyalty:admin scope"
+          }
+        },
+        "security": [
+          {
+            "loyalty:admin": []
+          }
+        ]
+      }
+    },
+    "/v1/points/award": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "award_points",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/points/calculate": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "trigger_points_calculation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/points/redeem": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "redeem_points",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/programs": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "list_programs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "create_program",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/programs/{program_id}/rewards": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "list_rewards",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "create_reward",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/programs/{program_id}/rewards/{reward_id}": {
+      "put": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "update_reward",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "delete_reward",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/rewards/redeem": {
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "redeem_reward",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/tiers": {
+      "get": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "list_tiers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "loyalty"
+        ],
+        "operationId": "configure_tier",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {},
+  "security": [],
+  "tags": [
+    {
+      "name": "loyalty",
+      "description": "Hotel8:Loyalty admin API — members, points"
+    }
+  ]
+}

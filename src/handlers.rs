@@ -47,6 +47,17 @@ fn err_db(e: sqlx::Error) -> (StatusCode, String) {
 fn err_emit(e: sentin8::bus::outbox::OutboxError) -> (StatusCode, String) {
     (StatusCode::INTERNAL_SERVER_ERROR, e.to_string())
 }
+#[utoipa::path(
+    get,
+    path = "/v1/health",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn health(
     axum::extract::State(_state): axum::extract::State<AppState>,
@@ -58,6 +69,17 @@ pub async fn health(
 
 // ── Programs ──
 
+#[utoipa::path(
+    post,
+    path = "/v1/programs",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 pub async fn create_program(
     State(state): State<AppState>,
     headers: axum::http::HeaderMap,
@@ -110,7 +132,7 @@ pub async fn create_program(
 /// `POST /v1/members`
 #[utoipa::path(
     post,
-    path = "/v1/admin/members",
+    path = "/v1/members",
     request_body = serde_json::Value,
     responses(
         (status = 200, description = "Member created", body = serde_json::Value),
@@ -163,6 +185,17 @@ pub async fn create_member(
         serde_json::json!({ "id": id, "program_id": program_id, "member_number": row.get::<String, _>("member_number"), "tier": tier, "points_balance": row.get::<i64, _>("points_balance"), "first_name": first_name, "last_name": last_name, "email": email }),
     ))
 }
+#[utoipa::path(
+    post,
+    path = "/v1/points/award",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn award_points(
     State(state): State<AppState>,
@@ -207,6 +240,17 @@ pub async fn award_points(
         serde_json::json!({ "id": txn_id, "member_id": member_id, "points": row.get::<i64, _>("points"), "type": "EARN", "created_at": row.get::<chrono::DateTime<chrono::Utc>, _>("created_at") }),
     ))
 }
+#[utoipa::path(
+    post,
+    path = "/v1/points/redeem",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn redeem_points(
     State(state): State<AppState>,
@@ -271,6 +315,17 @@ pub async fn redeem_points(
 }
 
 // ── Program types (LOYALTY_NOW, POINTS_BASED, HYBRID) ──
+#[utoipa::path(
+    get,
+    path = "/v1/programs",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn list_programs(
     State(state): State<AppState>,
@@ -300,6 +355,17 @@ pub async fn list_programs(
 }
 
 // ── Tier configuration ──
+#[utoipa::path(
+    post,
+    path = "/v1/tiers",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn configure_tier(
     State(state): State<AppState>,
@@ -346,6 +412,17 @@ pub async fn configure_tier(
         serde_json::json!({ "id": id, "program_id": program_id, "tier": row.get::<String, _>("tier"), "min_points": min_points, "benefits": row.get::<serde_json::Value, _>("benefits") }),
     ))
 }
+#[utoipa::path(
+    get,
+    path = "/v1/tiers",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn list_tiers(
     State(state): State<AppState>,
@@ -379,6 +456,17 @@ pub async fn list_tiers(
 }
 
 // ── -Reward CRUD and types ──
+#[utoipa::path(
+    post,
+    path = "/v1/programs/{program_id}/rewards",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn create_reward(
     State(state): State<AppState>,
@@ -438,6 +526,17 @@ pub async fn create_reward(
         "voucher_validity_days": row.get::<i32, _>("voucher_validity_days"), "is_active": row.get::<bool, _>("is_active"),
     })))
 }
+#[utoipa::path(
+    get,
+    path = "/v1/programs/{program_id}/rewards",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn list_rewards(
     State(state): State<AppState>,
@@ -466,6 +565,17 @@ pub async fn list_rewards(
     conn.commit().await.map_err(err_db)?;
     Ok(Json(serde_json::json!({ "items": items })))
 }
+#[utoipa::path(
+    put,
+    path = "/v1/programs/{program_id}/rewards/{reward_id}",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn update_reward(
     State(state): State<AppState>,
@@ -505,6 +615,17 @@ pub async fn update_reward(
         serde_json::json!({ "id": row.get::<uuid::Uuid, _>("id"), "item_code": row.get::<String, _>("item_code"), "item_name": row.get::<String, _>("item_name"), "points_cost": row.get::<i64, _>("points_cost"), "is_active": row.get::<bool, _>("is_active") }),
     ))
 }
+#[utoipa::path(
+    delete,
+    path = "/v1/programs/{program_id}/rewards/{reward_id}",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn delete_reward(
     State(state): State<AppState>,
@@ -545,7 +666,7 @@ pub async fn delete_reward(
 /// `GET /v1/members/{member_id}`
 #[utoipa::path(
     get,
-    path = "/v1/admin/members/{id}",
+    path = "/v1/members/{member_id}",
     params(("id" = uuid::Uuid, Path, description = "Member ID")),
     responses(
         (status = 200, description = "Member details", body = serde_json::Value),
@@ -586,6 +707,17 @@ pub async fn get_member(
 }
 
 // ── PMS CRM integration — link loyalty member to guest profile ──
+#[utoipa::path(
+    post,
+    path = "/v1/members/link-guest",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn link_to_guest_profile(
     State(state): State<AppState>,
@@ -654,7 +786,7 @@ pub async fn link_to_guest_profile(
 /// `GET /v1/admin/programs/{program_id}/members`
 #[utoipa::path(
     get,
-    path = "/v1/admin/members",
+    path = "/v1/admin/programs/{program_id}/members",
     responses(
         (status = 200, description = "List of members", body = serde_json::Value),
         (status = 403, description = "Missing loyalty:admin scope"),
@@ -698,6 +830,17 @@ pub async fn search_members(
 }
 
 // ── Manual points adjustment ──
+#[utoipa::path(
+    post,
+    path = "/v1/admin/programs/{program_id}/members/{member_id}/adjust",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn adjust_points(
     State(state): State<AppState>,
@@ -754,6 +897,17 @@ pub async fn adjust_points(
 
 // ── Bus consumer — listen for pms.guest.checked_out ──
 // (Bus consumer is a background task, but we expose a trigger endpoint)
+#[utoipa::path(
+    post,
+    path = "/v1/points/calculate",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn trigger_points_calculation(
     State(state): State<AppState>,
@@ -831,7 +985,7 @@ pub async fn trigger_points_calculation(
 /// `GET /v1/members/{member_id}/transactions`
 #[utoipa::path(
     get,
-    path = "/v1/admin/points",
+    path = "/v1/members/{member_id}/transactions",
     params(("member_id" = uuid::Uuid, Path, description = "Member ID")),
     responses(
         (status = 200, description = "Point transaction history", body = serde_json::Value),
@@ -872,6 +1026,17 @@ pub async fn get_member_transactions(
 }
 
 // ── Cron job for points expiry ──
+#[utoipa::path(
+    post,
+    path = "/v1/cron/expire-points",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty-cron",
+)]
 
 pub async fn expire_points(
     State(state): State<AppState>,
@@ -924,6 +1089,17 @@ pub async fn expire_points(
 }
 
 // ── Cron job for tier review ──
+#[utoipa::path(
+    post,
+    path = "/v1/cron/review-tiers",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty-cron",
+)]
 
 pub async fn review_tiers(
     State(state): State<AppState>,
@@ -1003,6 +1179,17 @@ pub async fn review_tiers(
 }
 
 // ── Available rewards catalog ──
+#[utoipa::path(
+    get,
+    path = "/v1/members/{member_id}/rewards",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn get_member_rewards(
     State(state): State<AppState>,
@@ -1046,6 +1233,17 @@ pub async fn get_member_rewards(
 }
 
 // ── Reward code/voucher generation on redemption ──
+#[utoipa::path(
+    post,
+    path = "/v1/rewards/redeem",
+    responses(
+        (status = 200, description = "OK", body = serde_json::Value),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Forbidden"),
+    ),
+    security(),
+    tag = "loyalty",
+)]
 
 pub async fn redeem_reward(
     State(state): State<AppState>,
