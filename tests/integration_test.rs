@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Hotel8:Loyalty
 // SPDX-License-Identifier: Apache-2.0
 
-//! Hotel8:Loyalty integration tests (test-strategy Layer 3) — DB-free.
+//! Hotel8:Loyalty integration tests (test-strategy Layer 3) - DB-free.
 //!
 //! Exercises the extracted pure rules (`loyalty_rules`) end-to-end the way
 //! the handlers use them: tier resolution → award → redeem → adjust → expire.

@@ -57,6 +57,6 @@ use utoipa::OpenApi;
     security(),
     tags(
         (name = "policy", description = "Shield policy administration (shared surface)"),
-        (name = "loyalty", description = "Hotel8:Loyalty admin API — members, points"),
+        (name = "loyalty", description = "Hotel8:Loyalty admin API - members, points"),
     ),
 )]pub struct LoyaltyOpenApi;

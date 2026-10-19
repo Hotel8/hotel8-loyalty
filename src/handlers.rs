@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Hotel8:Loyalty
 // SPDX-License-Identifier: Apache-2.0
 
-//! Loyalty HTTP handlers — programs, members, points.
+//! Loyalty HTTP handlers - programs, members, points.
 use crate::config::LoyaltyConfig;
 use crate::event_emit::{emit_tx, Publisher};
 use axum::extract::{Path, Query, State};
@@ -18,13 +18,13 @@ pub struct AppState {
     pub config: Arc<LoyaltyConfig>,
     pub pool: sqlx::PgPool,
     pub bus_client: sentin8::bus::client::BusClient,
-    /// Cross-service PMS client (B1) — replaces direct pms_* SQL.
+    /// Cross-service PMS client (B1) - replaces direct pms_* SQL.
     pub pms_client: hotel8::pms::client::H8pmsClient,
-    /// Shield policy engine: step 5 is the ONLY gate —
-    /// handlers verify the token (steps 1–4) then evaluate a
+    /// Shield policy engine: step 5 is the ONLY gate -
+    /// handlers verify the token (steps 1-4) then evaluate a
     /// `hotel8:loyalty:<resource>:<action>` target; no JWT scope check remains.
     pub policy: Arc<crate::policy::Engine>,
-    /// Shared Sentin8:Policy admin surface — same engine
+    /// Shared Sentin8:Policy admin surface - same engine
     /// instance the request path evaluates.
     pub admin: sentin8::shield::admin::SharedAdminState,
 }
@@ -43,7 +43,7 @@ fn err_db(e: sqlx::Error) -> (StatusCode, String) {
 }
 
 /// Map an outbox-emission failure to a 500 (DBX: a silently lost
-/// event is a contract violation — same 500 contract as `err_db`).
+/// event is a contract violation - same 500 contract as `err_db`).
 fn err_emit(e: sentin8::bus::outbox::OutboxError) -> (StatusCode, String) {
     (StatusCode::INTERNAL_SERVER_ERROR, e.to_string())
 }
@@ -706,7 +706,7 @@ pub async fn get_member(
     })))
 }
 
-// ── PMS CRM integration — link loyalty member to guest profile ──
+// ── PMS CRM integration - link loyalty member to guest profile ──
 #[utoipa::path(
     post,
     path = "/v1/members/link-guest",
@@ -762,7 +762,7 @@ pub async fn link_to_guest_profile(
         .await
         .map_err(err_db)?;
     let member_number: String = member.get("member_number");
-    // B1: profile update goes through the PMS HTTP API — no cross-service SQL.
+    // B1: profile update goes through the PMS HTTP API - no cross-service SQL.
     let _profile = state
         .pms_client
         .set_loyalty_number(property_id, guest_profile_id, &member_number)
@@ -895,7 +895,7 @@ pub async fn adjust_points(
     ))
 }
 
-// ── Bus consumer — listen for pms.guest.checked_out ──
+// ── Bus consumer - listen for pms.guest.checked_out ──
 // (Bus consumer is a background task, but we expose a trigger endpoint)
 #[utoipa::path(
     post,
@@ -934,7 +934,7 @@ pub async fn trigger_points_calculation(
         .and_then(|v| v.as_str())
         .and_then(|s| uuid::Uuid::parse_str(s).ok())
         .ok_or_else(|| (StatusCode::BAD_REQUEST, "member_id required".to_string()))?;
-    // Points calculation — base rate × tier multiplier × eligible spend
+    // Points calculation - base rate × tier multiplier × eligible spend
     let eligible_spend_str = req
         .get("eligible_spend")
         .and_then(|v| v.as_str())
@@ -1134,7 +1134,7 @@ pub async fn review_tiers(
         let lifetime: i64 = m.get("lifetime_points");
         let current_tier: String = m.get("current_tier");
         // D1: tier resolution + comparison counts use the pure rules in
-        // `loyalty_rules` — the DB rows only provide the configured thresholds.
+        // `loyalty_rules` - the DB rows only provide the configured thresholds.
         let mut new_tier = "BASE".to_string();
         for t in &tiers {
             let min_pts: i64 = t.get("min_points");

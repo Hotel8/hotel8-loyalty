@@ -1,8 +1,8 @@
-# Hotel8:Loyalty — Detailed Design Document
+# Hotel8:Loyalty - Detailed Design Document
 
 ## 1. Scope & Context
 
-**Owned by Loyalty:** database `hotel8`, schema `loyalty` — 8 tables
+**Owned by Loyalty:** database `hotel8`, schema `loyalty` - 8 tables
 (`loyalty.programs`, `members`, `point_transactions`, `tier_rules`,
 `redemption_catalog`, `redemptions` + `loyalty.tier` / `loyalty.txn_type`
 enums + `loyalty.outbox` / `loyalty.audit_journal`); event family `loyalty`;
@@ -56,7 +56,7 @@ graph LR
     CONL[consumer: checked_out] -- SSE --> BUSL2[("stream loyalty intake")]
 ```
 
-### Request lifecycle — stay points (event path)
+### Request lifecycle - stay points (event path)
 
 ```mermaid
 sequenceDiagram
@@ -76,7 +76,7 @@ sequenceDiagram
     end
 ```
 
-### Request lifecycle — redemption (API path)
+### Request lifecycle - redemption (API path)
 
 ```mermaid
 sequenceDiagram
@@ -133,15 +133,15 @@ transfer (where program permits).
 CRUD, tier rules, points adjust, member link (`member:linked`),
 redemption catalog CRUD, EOD-tier review (`tiers:reviewed`).
 
-### Cross-service data access — decision order (membus → bus → owner API)
+### Cross-service data access - decision order (membus → bus → owner API)
 
 Awards accrual is event-first: `hotel8:pms:reservation:checked_out`
-(consumer group `loyalty-awards`) triggers earning — the bus path. The
+(consumer group `loyalty-awards`) triggers earning - the bus path. The
 residual synchronous path is the PMS owner API for profile
-write-back when a member links (`set_loyalty_number`) — a read-your-writes
+write-back when a member links (`set_loyalty_number`) - a read-your-writes
 mutation that must return the updated profile to the caller in the same
 request. MemBus: none (member balances change at transaction pace, not tick
-pace; newest-wins adds nothing). No pms-schema grant — loyalty reads PMS
+pace; newest-wins adds nothing). No pms-schema grant - loyalty reads PMS
 only through its API, and never the reverse (PMS holds no loyalty grants).
 
 ### Event flow
@@ -162,16 +162,16 @@ sequenceDiagram
 
 ## 5. Cross-Cutting Concerns
 
-Auth/tenant/RLS/audit/drain/TLS pool — the platform contract, shell-owned;
+Auth/tenant/RLS/audit/drain/TLS pool - the platform contract, shell-owned;
 tier-aware ABAC (points:adjust authority) is tenant-authored.
 
 ## 6. Failure Modes & Recovery
 
 ```mermaid
 flowchart TD
-    A[checked_out replay] --> B[idempotent per reservation — no double award]
+    A[checked_out replay] --> B[idempotent per reservation - no double award]
     C[redemption race] --> D{balance >= cost in tx?}
-    D -->|no| E[422 — remaining balance returned]
+    D -->|no| E[422 - remaining balance returned]
     D -->|yes| F[commit]
     G[Bus outage] --> H[outbox persists; relay retries]
 ```
@@ -187,8 +187,8 @@ graph LR
 ```
 
 - Balance check is in-transaction (SELECT then conditional INSERT of the
-  redeem txn) — no SELECT-then-act race.
-- Event payload carries the spend snapshot — no PMS read-back on the hot
+  redeem txn) - no SELECT-then-act race.
+- Event payload carries the spend snapshot - no PMS read-back on the hot
   path.
 
 ## 8. Invariants, Insecure-Defaults Rejected, Unsafe Rationale
@@ -205,8 +205,8 @@ graph LR
 
 ```mermaid
 graph TD
-    UL[Unit — tier + earn rules, ledger math] --> IL[Integration — consumer idempotency, policy parity]
-    IL --> EL[E2E — member + admin surfaces via BFF]
+    UL[Unit - tier + earn rules, ledger math] --> IL[Integration - consumer idempotency, policy parity]
+    IL --> EL[E2E - member + admin surfaces via BFF]
 ```
 
 ## 10. Open Questions

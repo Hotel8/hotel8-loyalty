@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Hotel8:Loyalty
 // SPDX-License-Identifier: Apache-2.0
 
-//! Hotel8:Loyalty Admin UI handlers — RFW definitions.
+//! Hotel8:Loyalty Admin UI handlers - RFW definitions.
 //! Served from `GET /v1/admin/ui/{page}`, rendered by Sentin8:Dash at runtime.
 
 use crate::handlers::AppState;
@@ -61,7 +61,7 @@ pub async fn get_admin_ui(
         "settings" => AdminPage::new("Loyalty Settings")
             .widget(card("Settings", "Hotel8:Loyalty configuration."))
             .build(),
-        // ── Policy Studio — shared page
+        // ── Policy Studio - shared page
         // constructors; the guard guarantees `Some` (§3.7 dispatch).
         p if sentin8::rfw::policy_page("hotel8:loyalty", p).is_some() => {
             sentin8::rfw::policy_page("hotel8:loyalty", p)

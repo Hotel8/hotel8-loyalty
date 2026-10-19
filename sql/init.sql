@@ -3,7 +3,7 @@
 -- SPDX-FileCopyrightText: Copyright Contributors to the Hotel8:Loyalty
 -- SPDX-License-Identifier: Apache-2.0
 
--- Hotel8:Loyalty — Loyalty program service tables.
+-- Hotel8:Loyalty - Loyalty program service tables.
 CREATE SCHEMA IF NOT EXISTS loyalty;
 DO $$ BEGIN
     CREATE TYPE loyalty.tier AS ENUM ('BASE', 'SILVER', 'GOLD', 'PLATINUM', 'DIAMOND');
@@ -116,7 +116,7 @@ CREATE POLICY loyalty_tr_rls ON loyalty.tier_rules USING (program_id IN (SELECT 
 DROP POLICY IF EXISTS loyalty_rc_rls ON loyalty.redemption_catalog;
 CREATE POLICY loyalty_rc_rls ON loyalty.redemption_catalog USING (program_id IN (SELECT id FROM loyalty.programs));
 -- ──────────────────────────────────────────────────────────────────────────
--- Local outbox (DBX, architecture-principles §6.7) — producer path:
+-- Local outbox (DBX, architecture-principles §6.7) - producer path:
 -- rows are appended in the SAME transaction as the domain change; the
 -- shell's post-commit relay pushes them to Bus POST /v1/produce
 -- (M2M sentin8:bus:produce, idempotency_key = row id).
@@ -166,7 +166,7 @@ CREATE TRIGGER outbox_notify_trigger
 -- Local audit journal (architecture-principles §6.8): same-transaction
 -- journal rows; the shell's post-commit pusher ships them to Sys
 -- POST /v1/audit (M2M sentin8:sys:audit:write). A Sys outage only delays
--- delivery — rows persist until pushed.
+-- delivery - rows persist until pushed.
 -- Generated from sentin8_audit::audit_journal_sql("loyalty").
 -- ──────────────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS loyalty.audit_journal (

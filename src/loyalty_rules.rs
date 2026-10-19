@@ -3,10 +3,10 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Hotel8:Loyalty
 // SPDX-License-Identifier: Apache-2.0
 
-//! Pure loyalty rules — DB-free, testable.
+//! Pure loyalty rules - DB-free, testable.
 //!
 //! Tier progression over the `hotel8.loyalty_tier` DB enum labels
-//! (BASE/SILVER/GOLD/PLATINUM/DIAMOND — see `services/loyalty/sql/init.sql`)
+//! (BASE/SILVER/GOLD/PLATINUM/DIAMOND - see `services/loyalty/sql/init.sql`)
 //! and the point math (accrual truncation, redemption guard, adjust
 //! clamping, expiry zero-out). The handlers call these fns; the SQL remains
 //! the source of truth for stored values.

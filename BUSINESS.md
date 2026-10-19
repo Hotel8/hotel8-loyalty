@@ -1,4 +1,4 @@
-# Hotel8:Loyalty — Business Requirements & Functionality
+# Hotel8:Loyalty - Business Requirements & Functionality
 
 > Audience: product owners, business analysts, and anyone evaluating what
 > Hotel8:Loyalty **does for the business**. For architecture read
@@ -60,7 +60,7 @@
 | `hotel8:loyalty:reward:created / updated / deleted / redeemed` | Redemption catalog and usage |
 | `hotel8:loyalty:tiers:reviewed` | Tier review pass |
 
-**Inbound (consumed):** `hotel8:pms:reservation:checked_out` — awards stay
+**Inbound (consumed):** `hotel8:pms:reservation:checked_out` - awards stay
 points.
 
 ## 5. Business Rules & Invariants
@@ -69,7 +69,7 @@ points.
 2. Points earned from a stay are awarded exactly once per stay.
 3. Tier progression follows program thresholds automatically.
 4. Every ledger movement records its actor and business reason.
-5. Redemption at POS deducts loyalty first-class — the guest never
+5. Redemption at POS deducts loyalty first-class - the guest never
    double-pays.
 6. Program rules changes affect future movements only.
 

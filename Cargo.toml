@@ -10,7 +10,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Hotel8/hotel8-loyalty"
 rust-version = "1.85"
-description = "Sentin8 Hotel8:Loyalty — Loyalty Program service."
+description = "Sentin8 Hotel8:Loyalty - Loyalty Program service."
 
 [[bin]]
 name = "hotel8-loyalty"

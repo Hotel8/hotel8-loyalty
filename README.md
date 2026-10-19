@@ -1,4 +1,4 @@
-# README.md: Hotel8:Loyalty — Guest Loyalty Program
+# README.md: Hotel8:Loyalty - Guest Loyalty Program
 
 ## 1. Summary
 
@@ -33,26 +33,26 @@ graph TD
 
 ## 4. Key Traits and Data Structures
 
-- `LoyaltyRules` — pure tier-progression + earn-rate functions over the
+- `LoyaltyRules` - pure tier-progression + earn-rate functions over the
   `loyalty.tier` enum labels (testable without a database).
-- Point transactions — an append-only ledger with typed movements
+- Point transactions - an append-only ledger with typed movements
   (earn/redeem/adjust/expire/transfer) and per-program scoping.
-- Redemption catalog — admin-curatable reward items with cost rules.
+- Redemption catalog - admin-curatable reward items with cost rules.
 
 ## 5. Rationale, Trade-offs, and Alternatives
 
-- **Append-only ledger** — balances derive from transactions; corrections are
+- **Append-only ledger** - balances derive from transactions; corrections are
   adjustments, never edits. Rejecting mutable balances preserves audit.
-- **Event-driven stay points** — check-out is the fact that earns points;
+- **Event-driven stay points** - check-out is the fact that earns points;
   alternatives (scheduled scans) both lag and double-count risk.
-- **Tier thresholds as rules** — progression is data + a pure function, not a
+- **Tier thresholds as rules** - progression is data + a pure function, not a
   stored rank that can drift from activity.
-- **Cross-service link via PMS API** — member↔guest-profile linkage uses
+- **Cross-service link via PMS API** - member↔guest-profile linkage uses
   PMS's endpoint (no vertical cross-service SQL), keeping service boundaries.
 
 ## 6. Internal Implementation & Invariants (Private Design)
 
-- Redeem requires balance ≥ cost at decision time inside the transaction —
+- Redeem requires balance ≥ cost at decision time inside the transaction -
   never a UI-only check.
 - Point expiry: program-authored windows; expiry is a computed state over
   ledger entries, not a destructive rewrite.

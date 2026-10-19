@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "hotel8-loyalty",
-    "description": "Sentin8 Hotel8:Loyalty — Loyalty Program service.",
+    "description": "Sentin8 Hotel8:Loyalty - Loyalty Program service.",
     "license": {
       "name": "MIT OR Apache-2.0",
       "identifier": "MIT OR Apache-2.0"
@@ -626,7 +626,7 @@
   "tags": [
     {
       "name": "loyalty",
-      "description": "Hotel8:Loyalty admin API — members, points"
+      "description": "Hotel8:Loyalty admin API - members, points"
     }
   ]
 }
