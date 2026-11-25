@@ -6,7 +6,8 @@
       "telemetry_property": {
         "slug": "loyalty",
         "name": "Hotel8:Loyalty Telemetry"
-      }
+      },
+      "exposure": "internal"
     }
   ]
 }
